@@ -5,8 +5,7 @@
         <h1>Vuemix</h1>
       </router-link>
       <nav>
-        <router-link to="about">Commits</router-link>
-        <router-link to="about">Acerca de</router-link>
+        <button>Push</button>
       </nav>
     </app-content>
   </header>

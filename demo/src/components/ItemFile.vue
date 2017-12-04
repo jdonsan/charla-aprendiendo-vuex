@@ -4,7 +4,6 @@
         <img :src="icon" :alt="name">
         {{ name }}
       </label>
-      <input type="checkbox" :name="id" :id="id">
   </item>
 </template>
 
