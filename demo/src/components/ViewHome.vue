@@ -1,35 +1,40 @@
 <template>
-  <app-view title="Hacer commit">
-    <h3>Unestaged Files</h3>
-    <list>
-      <item-file 
-        v-for="file in unestagedFiles"
-        :key="file.id"
-        :id="file.id"
-        :type="file.type"
-        :name="file.name"
-        @click.native="changeToStagedFile(file.id)"
-      />
-    </list>
+  <app-view title="Commit" class="view-home">
+    <app-section title="Unestaged Files">
+      <list>
+        <item-file 
+          v-for="file in unestagedFiles"
+          :key="file.id"
+          :id="file.id"
+          :type="file.type"
+          :name="file.name"
+          @click.native="changeToStagedFile(file.id)"
+        />
+      </list>
+    </app-section>
 
-    <h3>Staged Files</h3>
-    <list>
-      <item-file 
-        v-for="file in stagedFiles"
-        :key="file.id"
-        :id="file.id"
-        :type="file.type"
-        :name="file.name"
-        @click.native="changeToUnestagedFile(file.id)"
-      />
-    </list>
+    <app-section title="Staged Files">
+      <list>
+        <item-file 
+          v-for="file in stagedFiles"
+          :key="file.id"
+          :id="file.id"
+          :type="file.type"
+          :name="file.name"
+          @click.native="changeToUnestagedFile(file.id)"
+        />
+      </list>
+    </app-section>
 
-    <form-commit />
+    <app-section title="Commit Message">
+      <form-commit/>
+    </app-section>
   </app-view>
 </template>
 
 <script>
 import AppView from '@/components/AppView'
+import AppSection from '@/components/AppSection'
 import List from '@/components/List'
 import ItemFile from '@/components/ItemFile'
 import FormCommit from '@/components/FormCommit'
@@ -40,6 +45,7 @@ export default {
 
   components: {
     AppView,
+    AppSection,
     List,
     ItemFile,
     FormCommit
@@ -49,6 +55,7 @@ export default {
   methods: mapMutations(['changeToStagedFile', 'changeToUnestagedFile'])
 }
 </script>
+
 
 
 

@@ -1,7 +1,7 @@
 <template>
-  <main class="app-content">
+  <div class="app-content">
       <slot></slot>
-  </main>
+  </div>
 </template>
 
 <script>

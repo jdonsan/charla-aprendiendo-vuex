@@ -1,9 +1,7 @@
 <template>
   <header class="app-header">
     <app-content>
-      <router-link to="home">
-        <h1>Vuemix</h1>
-      </router-link>
+      <h1>Vuemix</h1>
       <nav>
         <button>Push</button>
       </nav>
@@ -24,7 +22,8 @@ export default {
 
 <style lang="scss" scoped>
 .app-header {
-  background: #ddd;
+  background: #f25f5c;
+  color: #50514f;
   padding: 1rem 0;
 
   h1 {
@@ -32,9 +31,16 @@ export default {
     padding: 0;
   }
 
-  a {
-    color: #222;
-    text-decoration-line: none;
+  button {
+    background: transparent;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: .5rem 1rem;
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+    box-shadow: none;
   }
 }
 </style>

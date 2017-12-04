@@ -21,6 +21,7 @@ body {
   margin: 0;
   padding: 0;
   background: #fafafa;
+  font-family: 'Montserrat', sans-serif;
 }
 </style>
 
