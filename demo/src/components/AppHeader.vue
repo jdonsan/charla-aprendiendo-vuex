@@ -3,7 +3,10 @@
     <app-content>
       <h1>Vuemix</h1>
       <nav>
-        <button>Push</button>
+        <div v-if="someCommit" class="app-header-push">
+          <button @click="syncCommits">Push</button>
+          <span>{{ unsynchronizedCommitsCount }}</span>
+        </div>
       </nav>
     </app-content>
   </header>
@@ -11,12 +14,24 @@
 
 <script>
 import AppContent from '@/components/AppContent'
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'app-header',
+
   components: {
     AppContent
-  }
+  },
+
+  computed: {
+    ...mapGetters(['unsynchronizedCommitsCount']),
+
+    someCommit: function () {
+      return this.unsynchronizedCommitsCount > 0
+    }
+  },
+
+  methods: mapMutations(['syncCommits'])
 }
 </script>
 
@@ -31,16 +46,34 @@ export default {
     padding: 0;
   }
 
-  button {
-    background: transparent;
-    color: #fff;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    padding: .5rem 1rem;
-    font-family: "Montserrat", sans-serif;
-    font-weight: bold;
-    box-shadow: none;
+  .app-header-push {
+    position: relative;
+
+    button {
+      background: transparent;
+      color: #fff;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      font-family: "Montserrat", sans-serif;
+      font-weight: bold;
+      box-shadow: none;
+      z-index: 1;
+      position: relative;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    span {
+      display: inline-block;
+      background: #50514F;
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100%;
+    }
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <app-view title="Commit" class="view-home">
-    <app-section title="Unestaged Files">
-      <list>
+    <app-section :title="'Unestaged Files (' + unestagedFilesCount + ')'">
+      <list v-if="unestagedFiles.length !== 0">
         <item-file 
           v-for="file in unestagedFiles"
           :key="file.id"
@@ -13,9 +13,9 @@
       </list>
     </app-section>
 
-    <app-section title="Staged Files">
-      <list>
-        <item-file 
+    <app-section :title="'Staged Files (' + stagedFilesCount + ')'">
+      <list v-if="stagedFiles.length !== 0">
+        <item-file
           v-for="file in stagedFiles"
           :key="file.id"
           :id="file.id"
@@ -51,7 +51,7 @@ export default {
     FormCommit
   },
 
-  computed: mapGetters(['unestagedFiles', 'stagedFiles']),
+  computed: mapGetters(['unestagedFiles', 'unestagedFilesCount', 'stagedFiles', 'stagedFilesCount']),
   methods: mapMutations(['changeToStagedFile', 'changeToUnestagedFile'])
 }
 </script>
