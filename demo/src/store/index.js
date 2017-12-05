@@ -20,15 +20,10 @@ export default new Vuex.Store({
         { id: 1, type: 'scss', name: 'search.scss', status: FileStatus.UNESTAGED },
         { id: 2, type: 'js', name: 'app.js', status: FileStatus.UNESTAGED },
         { id: 3, type: 'html', name: 'index.html', status: FileStatus.UNESTAGED },
-        { id: 4, type: 'scss', name: '_mixins.scss', status: FileStatus.STAGED },
+        { id: 4, type: 'scss', name: '_mixins.scss', status: FileStatus.UNESTAGED },
       ],
 
-      commits: [
-        { hash: '79c6755548b23de658329a1dd29eb79cec047b4c', comment: 'Initial Commit', status: CommitStatus.UNSYNCHRONIZED },
-        { hash: '0bc1c1ed1b0079f095d384458d758ba643206679', comment: 'Second Commit', status: CommitStatus.UNSYNCHRONIZED },
-        { hash: '75183383ea5716e427e7ffbad643400e87977608', comment: 'Initial Commit', status: CommitStatus.UNSYNCHRONIZED },
-        { hash: 'b7ec41782774c57b050b296d1a15aaa32e155003', comment: 'Initial Commit', status: CommitStatus.SYNCHRONIZED }
-      ]
+      commits: []
     }
   },
 
@@ -58,7 +53,13 @@ export default new Vuex.Store({
     },
 
     doCommit(state, comment) {
-      state.commits.push({ hash: 'b7ec41782774c57b050b296d1a15aaa32e155003', comment, status: CommitStatus.UNSYNCHRONIZED })
+      state.commits.push({ 
+        hash: 'b7ec41782774c57b050b296d1a15aaa32e155003', 
+        comment, 
+        files: state.files.filter(file => file.status === FileStatus.STAGED),
+        status: CommitStatus.UNSYNCHRONIZED 
+      })
+      state.files = state.files.filter(file => file.status === FileStatus.UNESTAGED) 
     },
 
     syncCommits(state) {
