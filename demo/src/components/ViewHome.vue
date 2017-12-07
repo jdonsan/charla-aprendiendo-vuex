@@ -8,7 +8,7 @@
           :id="file.id"
           :type="file.type"
           :name="file.name"
-          @click.native="changeToStagedFile(file.id)"
+          @click.native="changeStatusFile({ id: file.id, status: true })"
         />
       </list>
     </app-section>
@@ -21,7 +21,7 @@
           :id="file.id"
           :type="file.type"
           :name="file.name"
-          @click.native="changeToUnestagedFile(file.id)"
+          @click.native="changeStatusFile({ id: file.id, status: false })"
         />
       </list>
     </app-section>
@@ -52,7 +52,11 @@ export default {
   },
 
   computed: mapGetters(['unestagedFiles', 'unestagedFilesCount', 'stagedFiles', 'stagedFilesCount']),
-  methods: mapMutations(['changeToStagedFile', 'changeToUnestagedFile'])
+  methods: mapMutations(['changeStatusFile']),
+
+  created() {
+    this.$store.dispatch('getAllCommits')
+  }
 }
 </script>
 

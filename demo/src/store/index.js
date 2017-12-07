@@ -1,26 +1,18 @@
 import Vuex from 'vuex'
 import Vue from 'vue';
+import orm from '@/orm';
+import crypto from 'crypto';
 
 Vue.use(Vuex);
-
-const FileStatus = {
-  UNESTAGED: 1,
-  STAGED: 2
-}
-
-const CommitStatus = {
-  UNSYNCHRONIZED: 1,
-  SYNCHRONIZED: 2
-}
 
 export default new Vuex.Store({
   state() {
     return {
       files: [
-        { id: 1, type: 'scss', name: 'search.scss', status: FileStatus.UNESTAGED },
-        { id: 2, type: 'js', name: 'app.js', status: FileStatus.UNESTAGED },
-        { id: 3, type: 'html', name: 'index.html', status: FileStatus.UNESTAGED },
-        { id: 4, type: 'scss', name: '_mixins.scss', status: FileStatus.UNESTAGED },
+        { id: 1, type: 'scss', name: 'search.scss', staged: false },
+        { id: 2, type: 'js', name: 'app.js', staged: false },
+        { id: 3, type: 'html', name: 'index.html', staged: false },
+        { id: 4, type: 'scss', name: '_mixins.scss', staged: false },
       ],
 
       commits: []
@@ -28,42 +20,56 @@ export default new Vuex.Store({
   },
 
   getters: {
-    unestagedFiles: state => state.files.filter(file => file.status === FileStatus.UNESTAGED),
+    unestagedFiles: state => state.files.filter(file => !file.staged),
     unestagedFilesCount: (state, getters) => getters.unestagedFiles.length,
-    stagedFiles: state => state.files.filter(file => file.status === FileStatus.STAGED),
+    stagedFiles: state => state.files.filter(file => file.staged),
     stagedFilesCount: (state, getters) => getters.stagedFiles.length,
-    unsynchronizedCommitsCount: state => state.commits.filter(commit => commit.status === CommitStatus.UNSYNCHRONIZED).length
+    unsynchronizedCommits: state => state.commits.filter(commit => !commit.synchronized),
+    unsynchronizedCommitsCount: (state, getters) => getters.unsynchronizedCommits.length
   },
 
   mutations: {
-    changeToStagedFile(state, id) {
+    changeStatusFile(state, { id, status }) {
       state.files.forEach(file => {
         if (file.id === id) {
-          file.status = FileStatus.STAGED
-        }
-      })
-    },
-
-    changeToUnestagedFile(state, id) {
-      state.files.forEach(file => {
-        if (file.id === id) {
-          file.status = FileStatus.UNESTAGED
+          file.staged = status
         }
       })
     },
 
     doCommit(state, comment) {
-      state.commits.push({ 
-        hash: 'b7ec41782774c57b050b296d1a15aaa32e155003', 
-        comment, 
-        files: state.files.filter(file => file.status === FileStatus.STAGED),
-        status: CommitStatus.UNSYNCHRONIZED 
+      state.commits.push({
+        hash: crypto.randomBytes(20).toString('hex'),
+        comment,
+        files: state.files.filter(file => file.staged),
+        synchronized: false
       })
-      state.files = state.files.filter(file => file.status === FileStatus.UNESTAGED) 
+      state.files = state.files.filter(file => !file.staged)
+    },
+
+    setCommits(state, commits) {
+      state.commits = commits
     },
 
     syncCommits(state) {
-      state.commits.map(commit => commit.status = CommitStatus.SYNCHRONIZED)
+      state.commits.map(commit => commit.synchronized = true)
+    }
+  },
+
+  actions: {
+    async getAllCommits({ commit }) {
+      const commits = await orm.commits.orderBy('hash').toArray();
+      commit('setCommits', commits || [])
+    },
+
+    async saveAllCommits({ commit, getters, state }) {
+      commit('syncCommits')
+
+      return await state.commits.reduce((promises, commit) => {
+        const promise = orm.commits.put(commit)
+        promises.push(promise)
+        return promises
+      }, [])
     }
   }
 })

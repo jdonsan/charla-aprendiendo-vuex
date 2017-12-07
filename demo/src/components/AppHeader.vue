@@ -4,7 +4,7 @@
       <h1>Vuemix</h1>
       <nav>
         <div v-if="someCommit" class="app-header-push">
-          <button @click="syncCommits">Push</button>
+          <button @click="saveAllCommits">Push</button>
           <span>{{ unsynchronizedCommitsCount }}</span>
         </div>
       </nav>
@@ -14,7 +14,7 @@
 
 <script>
 import AppContent from '@/components/AppContent'
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'app-header',
@@ -31,7 +31,7 @@ export default {
     }
   },
 
-  methods: mapMutations(['syncCommits'])
+  methods: mapActions(['saveAllCommits'])
 }
 </script>
 
