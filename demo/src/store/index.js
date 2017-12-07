@@ -64,12 +64,7 @@ export default new Vuex.Store({
 
     async saveAllCommits({ commit, getters, state }) {
       commit('syncCommits')
-
-      return await state.commits.reduce((promises, commit) => {
-        const promise = orm.commits.put(commit)
-        promises.push(promise)
-        return promises
-      }, [])
+      return await state.commits.map(commit => orm.commits.put(commit))
     }
   }
 })
